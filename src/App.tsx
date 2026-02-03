@@ -2,6 +2,13 @@ import { Redirect, Route } from 'react-router-dom';
 import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
 import Home from './pages/Home';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import AddBreakdown from './pages/AddBreakdown';
+import RepairList from './pages/RepairList';
+import RepairDetail from './pages/RepairDetail';
+import Payment from './pages/Payment';
+import { Toaster } from 'react-hot-toast';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -37,13 +44,18 @@ setupIonicReact();
 
 const App: React.FC = () => (
   <IonApp>
+    <Toaster position="top-center" />
     <IonReactRouter>
       <IonRouterOutlet>
-        <Route exact path="/home">
-          <Home />
-        </Route>
+        <Route exact path="/login" component={Login} />
+        <Route exact path="/register" component={Register} />
+        <Route exact path="/home" component={Home} />
+        <Route exact path="/add-breakdown" component={AddBreakdown} />
+        <Route exact path="/repairs" component={RepairList} />
+        <Route exact path="/repair/:id" component={RepairDetail} />
+        <Route exact path="/payment/:id" component={Payment} />
         <Route exact path="/">
-          <Redirect to="/home" />
+          <Redirect to="/login" />
         </Route>
       </IonRouterOutlet>
     </IonReactRouter>
