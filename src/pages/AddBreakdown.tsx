@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   IonContent,
   IonHeader,
@@ -17,33 +17,47 @@ import {
   IonLoading,
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
-import { ref, push, set } from 'firebase/database';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
 import { db, auth } from '../firebase';
 import { toast } from 'react-hot-toast';
-
-const REPAIR_TYPES = [
-  'Frein',
-  'Vidange',
-  'Filtre',
-  'Batterie',
-  'Amortisseurs',
-  'Embrayage',
-  'Pneus',
-  'Système de refroidissement',
-];
 
 const AddBreakdown: React.FC = () => {
   const [model, setModel] = useState('');
   const [licensePlate, setLicensePlate] = useState('');
-  const [selectedRepairs, setSelectedRepairs] = useState<string[]>([]);
+  const [selectedRepairs, setSelectedRepairs] = useState<any[]>([]);
+  const [interventions, setInterventions] = useState<any[]>([]);
   const [showLoading, setShowLoading] = useState(false);
   const history = useHistory();
 
-  const toggleRepair = (repair: string) => {
-    if (selectedRepairs.includes(repair)) {
-      setSelectedRepairs(selectedRepairs.filter((r) => r !== repair));
+  useEffect(() => {
+    const fetchInterventions = async () => {
+      try {
+        const querySnapshot = await getDocs(collection(db, 'interventions'));
+        const data = querySnapshot.docs.map(doc => ({
+            id: doc.id,
+            ...doc.data()
+        }));
+        setInterventions(data);
+      } catch (error) {
+        console.error("Error fetching interventions:", error);
+        toast.error("Erreur lors du chargement des interventions");
+      }
+    };
+    fetchInterventions();
+  }, []);
+
+  const toggleRepair = (intervention: any) => {
+    const isSelected = selectedRepairs.find(r => r.name === intervention.name);
+    
+    if (isSelected) {
+      setSelectedRepairs(selectedRepairs.filter((r) => r.name !== intervention.name));
     } else {
-      setSelectedRepairs([...selectedRepairs, repair]);
+      // On stocke le nom et la durée (en minutes)
+      setSelectedRepairs([...selectedRepairs, {
+        name: intervention.name,
+        duration: intervention.duration_minutes,
+        price: intervention.price || 0
+      }]);
     }
   };
 
@@ -62,15 +76,15 @@ const AddBreakdown: React.FC = () => {
 
     setShowLoading(true);
     try {
-      const carsRef = ref(db, 'cars');
-      const newCarRef = push(carsRef);
-      await set(newCarRef, {
+      await addDoc(collection(db, 'cars'), {
         ownerId: user.uid,
         ownerEmail: user.email,
         model,
         licensePlate,
-        repairs: selectedRepairs.map((type) => ({
-          type,
+        repairs: selectedRepairs.map((repair) => ({
+          type: repair.name,
+          duration: repair.duration, // Stocké en minutes
+          price: repair.price,
           status: 'pending',
           progress: 0,
         })),
@@ -118,17 +132,23 @@ const AddBreakdown: React.FC = () => {
 
           <IonList>
             <IonListHeader>
-              <IonLabel>Réparations nécessaires</IonLabel>
+              <IonLabel>Réparations nécessaires (Durée estimée)</IonLabel>
             </IonListHeader>
-            {REPAIR_TYPES.map((repair) => (
-              <IonItem key={repair} onClick={() => toggleRepair(repair)}>
-                <IonLabel>{repair}</IonLabel>
-                <IonCheckbox
-                  checked={selectedRepairs.includes(repair)}
-                  slot="end"
-                />
-              </IonItem>
-            ))}
+            {interventions.length === 0 ? (
+                <div className="ion-padding ion-text-center">Chargement des réparations...</div>
+            ) : (
+                interventions.map((intervention) => (
+                <IonItem key={intervention.id || intervention.name} onClick={() => toggleRepair(intervention)}>
+                    <IonLabel>
+                        {intervention.name} ({intervention.duration_minutes} min)
+                    </IonLabel>
+                    <IonCheckbox
+                    checked={selectedRepairs.some(r => r.name === intervention.name)}
+                    slot="end"
+                    />
+                </IonItem>
+                ))
+            )}
           </IonList>
 
           <IonButton expand="block" type="submit" className="ion-margin-top">

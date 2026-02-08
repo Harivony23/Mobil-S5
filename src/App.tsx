@@ -9,6 +9,9 @@ import RepairList from './pages/RepairList';
 import RepairDetail from './pages/RepairDetail';
 import Payment from './pages/Payment';
 import { Toaster } from 'react-hot-toast';
+import { useEffect } from 'react';
+import { setupForegroundNotifications } from './services/notificationService';
+
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -42,24 +45,31 @@ import './theme/variables.css';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  <IonApp>
-    <Toaster position="top-center" />
-    <IonReactRouter>
-      <IonRouterOutlet>
-        <Route exact path="/login" component={Login} />
-        <Route exact path="/register" component={Register} />
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/add-breakdown" component={AddBreakdown} />
-        <Route exact path="/repairs" component={RepairList} />
-        <Route exact path="/repair/:id" component={RepairDetail} />
-        <Route exact path="/payment/:id" component={Payment} />
-        <Route exact path="/">
-          <Redirect to="/login" />
-        </Route>
-      </IonRouterOutlet>
-    </IonReactRouter>
-  </IonApp>
-);
+const App: React.FC = () => {
+  useEffect(() => {
+    setupForegroundNotifications();
+  }, []);
+
+  return (
+    <IonApp>
+      <Toaster position="top-center" />
+      <IonReactRouter>
+        <IonRouterOutlet>
+          <Route exact path="/login" component={Login} />
+          <Route exact path="/register" component={Register} />
+          <Route exact path="/home" component={Home} />
+          <Route exact path="/add-breakdown" component={AddBreakdown} />
+          <Route exact path="/repairs" component={RepairList} />
+          <Route exact path="/repair/:id" component={RepairDetail} />
+          <Route exact path="/payment/:id" component={Payment} />
+          <Route exact path="/">
+            <Redirect to="/login" />
+          </Route>
+        </IonRouterOutlet>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
+
 
 export default App;

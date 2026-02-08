@@ -18,7 +18,7 @@ import {
   IonCardTitle,
 } from '@ionic/react';
 import { useParams, useHistory } from 'react-router-dom';
-import { ref, onValue, update } from 'firebase/database';
+import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { toast } from 'react-hot-toast';
 
@@ -29,9 +29,13 @@ const Payment: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const carRef = ref(db, `cars/${id}`);
-    const unsubscribe = onValue(carRef, (snapshot) => {
-      setCar(snapshot.val());
+    const carRef = doc(db, 'cars', id);
+    const unsubscribe = onSnapshot(carRef, (snapshot) => {
+      if (snapshot.exists()) {
+        setCar({ id: snapshot.id, ...snapshot.data() });
+      } else {
+        setCar(null);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -39,7 +43,7 @@ const Payment: React.FC = () => {
 
   const handlePayment = async () => {
     try {
-      await update(ref(db, `cars/${id}`), {
+      await updateDoc(doc(db, 'cars', id), {
         status: 'paid',
         paidAt: new Date().toISOString(),
       });

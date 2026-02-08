@@ -15,8 +15,9 @@ import {
 import { useHistory } from 'react-router-dom';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, db } from '../firebase';
-import { ref, set } from 'firebase/database';
+import { doc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
+
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -41,11 +42,12 @@ const Register: React.FC = () => {
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
       
-      // Initialize user in RTDB
-      await set(ref(db, `users/${user.uid}`), {
+      // Initialize user in Firestore
+      await setDoc(doc(db, 'users', user.uid), {
         email: user.email,
         createdAt: new Date().toISOString()
       });
+
 
       toast.success('Compte créé avec succès');
       history.push('/home');

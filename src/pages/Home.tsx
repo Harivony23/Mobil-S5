@@ -19,8 +19,9 @@ import { addOutline, logOutOutline, carOutline, hammerOutline } from 'ionicons/i
 import { useHistory } from 'react-router-dom';
 import { auth, db } from '../firebase';
 import { signOut, onAuthStateChanged } from 'firebase/auth';
-import { ref, onValue, query, orderByChild, equalTo } from 'firebase/database';
+import { collection, query, where, onSnapshot, doc, setDoc } from 'firebase/firestore';
 import { toast } from 'react-hot-toast';
+import { requestNotificationPermission } from '../services/notificationService';
 
 const Home: React.FC = () => {
   const [userCars, setUserCars] = useState<any[]>([]);
@@ -28,27 +29,34 @@ const Home: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+    const unsubscribeAuth = onAuthStateChanged(auth, async (user) => {
       if (!user) {
         history.push('/login');
       } else {
-        const carsRef = query(
-          ref(db, 'cars'),
-          orderByChild('ownerId'),
-          equalTo(user.uid)
+        // Request notification permission and get FCM token
+        const fcmToken = await requestNotificationPermission();
+        if (fcmToken) {
+          // Save token to Firestore for this user
+          await setDoc(doc(db, 'users', user.uid), {
+            fcmToken,
+            email: user.email,
+            updatedAt: new Date().toISOString()
+          }, { merge: true });
+          console.log('FCM token saved for user:', user.uid);
+        }
+
+        // Query cars owned by this user
+        const carsQuery = query(
+          collection(db, 'cars'),
+          where('ownerId', '==', user.uid)
         );
 
-        const unsubscribeCars = onValue(carsRef, (snapshot) => {
-          const data = snapshot.val();
-          if (data) {
-            const carList = Object.entries(data).map(([id, value]: [string, any]) => ({
-              id,
-              ...value,
-            }));
-            setUserCars(carList);
-          } else {
-            setUserCars([]);
-          }
+        const unsubscribeCars = onSnapshot(carsQuery, (snapshot) => {
+          const carList = snapshot.docs.map((doc) => ({
+            id: doc.id,
+            ...doc.data(),
+          }));
+          setUserCars(carList);
           setLoading(false);
         });
 

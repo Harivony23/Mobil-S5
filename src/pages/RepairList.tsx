@@ -15,7 +15,7 @@ import {
   IonText,
 } from '@ionic/react';
 import { useHistory } from 'react-router-dom';
-import { ref, onValue, query, orderByChild } from 'firebase/database';
+import { collection, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase';
 
 const RepairList: React.FC = () => {
@@ -24,18 +24,13 @@ const RepairList: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const carsRef = query(ref(db, 'cars'), orderByChild('createdAt'));
-    const unsubscribe = onValue(carsRef, (snapshot) => {
-      const data = snapshot.val();
-      if (data) {
-        const carList = Object.entries(data).map(([id, value]: [string, any]) => ({
-          id,
-          ...value,
-        })).reverse();
-        setCars(carList);
-      } else {
-        setCars([]);
-      }
+    const carsQuery = query(collection(db, 'cars'), orderBy('createdAt', 'desc'));
+    const unsubscribe = onSnapshot(carsQuery, (snapshot) => {
+      const carList = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      setCars(carList);
       setLoading(false);
     });
 
