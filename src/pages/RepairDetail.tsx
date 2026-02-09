@@ -41,92 +41,33 @@ const RepairDetail: React.FC = () => {
     return () => unsubscribe();
   }, [id]);
 
-  // Timer pour mettre à jour la progression de manière fluide
+  // Timer pour animer la progression de manière fluide (lecture seule)
   useEffect(() => {
     if (!car || !car.repairs) return;
 
     const interval = setInterval(() => {
-      const updatedRepairs = car.repairs.map((repair: any, index: number) => {
+      const updatedRepairs = car.repairs.map((repair: any) => {
         if (repair.status === 'in_progress' && repair.startTime) {
-            // Calculer la progression réelle
+            // Calculer la progression réelle pour l'affichage
             const startTime = new Date(repair.startTime).getTime();
             const now = new Date().getTime();
-            const durationMs = (repair.duration || 1) * 60 * 1000; // minutes -> ms
+            const durationMs = (repair.duration || 1) * 60 * 1000;
             
             let progress = (now - startTime) / durationMs;
+            if (progress > 1) progress = 1;
             
-            if (progress >= 1) {
-                progress = 1;
-                // Si terminée mais pas encore marquée done, on le fera
-                // Note: Idéalement on éviterait de faire ça dans le rendu, mais un effect pour déclencher finish serait mieux
-                // Pour simplifier l'affichage de suite:
-            }
             return { ...repair, progress };
         }
         return repair;
       });
-
-      // Vérifier si des réparations sont terminées
-      updatedRepairs.forEach((repair: any, index: number) => {
-         if (repair.status === 'in_progress' && repair.progress >= 1) {
-             finishRepair(index);
-         }
-      });
       
-      // Mise à jour locale pour l'animation (ne pas sauvegarder en DB à chaque tick pour éviter spam)
-      // Seulement si la progression a changé visuellement
+      // Mise à jour locale pour l'animation seulement
       setCar((prev: any) => prev ? ({ ...prev, repairs: updatedRepairs }) : null);
 
-    }, 1000); // Mise à jour chaque seconde
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [car]);
-
-
-  const startRepair = async (index: number) => {
-    if (repairingIndex !== null) return; // Empêcher double clic ou autre réparation si on veut limiter
-    
-    // On met à jour Firestore avec le temps de début
-    const updatedRepairs = [...car.repairs];
-    updatedRepairs[index].status = 'in_progress';
-    updatedRepairs[index].startTime = new Date().toISOString();
-    updatedRepairs[index].progress = 0;
-    
-    // Optimistic update
-    setCar({ ...car, repairs: updatedRepairs });
-    
-    try {
-        await updateDoc(doc(db, 'cars', id), { repairs: updatedRepairs });
-        toast.success("Réparation commencée !");
-    } catch (e) {
-        console.error("Error starting repair", e);
-        toast.error("Erreur au démarrage");
-    }
-  };
-
-  const finishRepair = async (index: number) => {
-    // Vérifier si déjà fini pour éviter boucles
-    if (car.repairs[index].status === 'done') return;
-      
-    const updatedRepairs = [...car.repairs];
-    updatedRepairs[index].status = 'done';
-    updatedRepairs[index].progress = 1;
-    // On garde startTime pour historique si voulu, ou on peut le laisser
-
-    const allDone = updatedRepairs.every((r: any) => r.status === 'done');
-    const updates: any = {
-      repairs: updatedRepairs,
-    };
-
-    if (allDone) {
-      updates.status = 'ready';
-      // toast.success('Toutes les réparations sont terminées !'); // Déplacé pour éviter spam si re-render
-    }
-
-    // On met à jour Firestore. Cela va déclencher le snapshot listener qui mettra à jour l'UI proprement.
-    await updateDoc(doc(db, 'cars', id), updates);
-    if (allDone) toast.success('Toutes les réparations sont terminées !');
-  };
 
   if (loading) return <IonPage><IonContent className="ion-padding ion-text-center"><IonSpinner /></IonContent></IonPage>;
   if (!car) return <IonPage><IonContent className="ion-padding">Voiture non trouvée</IonContent></IonPage>;
@@ -154,21 +95,17 @@ const RepairDetail: React.FC = () => {
             <div key={index} className="ion-margin-bottom">
               <IonItem lines="none">
                 <IonLabel>
-                  <h3>{repair.type}</h3>
-                  <p>{repair.status}</p>
+                  <h3>{repair.type} ({repair.duration} min)</h3>
+                  <p>
+                    <IonBadge color={
+                      repair.status === 'done' ? 'success' : 
+                      repair.status === 'in_progress' ? 'primary' : 'medium'
+                    }>
+                      {repair.status === 'done' ? 'Terminé' : 
+                       repair.status === 'in_progress' ? 'En cours' : 'En attente'}
+                    </IonBadge>
+                  </p>
                 </IonLabel>
-                {repair.status === 'pending' && (
-                  <IonButton 
-                    slot="end" 
-                    onClick={() => startRepair(index)}
-                    disabled={repairingIndex !== null}
-                  >
-                    Réparer
-                  </IonButton>
-                )}
-                {repair.status === 'done' && (
-                   <IonBadge color="success" slot="end">Terminé</IonBadge>
-                )}
               </IonItem>
               {repair.status === 'in_progress' && (
                 <IonProgressBar value={repair.progress} color="primary" />
@@ -188,3 +125,4 @@ const RepairDetail: React.FC = () => {
 };
 
 export default RepairDetail;
+
