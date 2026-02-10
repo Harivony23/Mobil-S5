@@ -5,21 +5,18 @@ import {
   IonPage,
   IonTitle,
   IonToolbar,
-  IonItem,
-  IonLabel,
   IonButton,
   IonButtons,
   IonBackButton,
   IonSpinner,
   IonText,
-  IonCard,
-  IonCardContent,
-  IonCardHeader,
-  IonCardTitle,
+  IonIcon,
 } from '@ionic/react';
 import { useParams, useHistory } from 'react-router-dom';
 import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
+import { carOutline, cardOutline, receiptOutline } from 'ionicons/icons';
+import { onAuthStateChanged } from 'firebase/auth';
 import { toast } from 'react-hot-toast';
 
 const Payment: React.FC = () => {
@@ -29,17 +26,35 @@ const Payment: React.FC = () => {
   const history = useHistory();
 
   useEffect(() => {
-    const carRef = doc(db, 'cars', id);
-    const unsubscribe = onSnapshot(carRef, (snapshot) => {
-      if (snapshot.exists()) {
-        setCar({ id: snapshot.id, ...snapshot.data() });
-      } else {
-        setCar(null);
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        history.push('/login');
+        return;
       }
-      setLoading(false);
+
+      const carRef = doc(db, 'cars', id);
+      const unsubscribeCar = onSnapshot(carRef, (snapshot) => {
+        if (snapshot.exists()) {
+          const data = snapshot.data();
+
+          if (data.ownerId !== user.uid) {
+            toast.error("Vous n'avez pas accès à ce paiement.");
+            history.push('/home');
+            return;
+          }
+
+          setCar({ id: snapshot.id, ...data });
+        } else {
+          setCar(null);
+        }
+        setLoading(false);
+      });
+
+      return () => unsubscribeCar();
     });
-    return () => unsubscribe();
-  }, [id]);
+
+    return () => unsubscribeAuth();
+  }, [id, history]);
 
   const handlePayment = async () => {
     try {
@@ -54,40 +69,70 @@ const Payment: React.FC = () => {
     }
   };
 
-  if (loading) return <IonPage><IonContent className="ion-padding ion-text-center"><IonSpinner /></IonContent></IonPage>;
+  if (loading) return <IonPage><IonContent className="ion-padding ion-text-center"><IonSpinner name="crescent" /></IonContent></IonPage>;
   if (!car) return <IonPage><IonContent className="ion-padding">Voiture non trouvée</IonContent></IonPage>;
 
-  const pricePerRepair = 50; 
-  const totalPrice = car.repairs.length * pricePerRepair;
+  const totalPrice = car.repairs?.reduce((acc: number, repair: any) => acc + (repair.price || 0), 0) || 0;
 
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="primary">
+      <IonHeader className="ion-no-border">
+        <IonToolbar>
           <IonButtons slot="start">
-            <IonBackButton defaultHref={`/repair/${id}`} />
+            <IonBackButton defaultHref={`/repair/${id}`} color="dark" />
           </IonButtons>
           <IonTitle>Paiement</IonTitle>
         </IonToolbar>
       </IonHeader>
       <IonContent className="ion-padding">
-        <IonCard>
-          <IonCardHeader>
-            <IonCardTitle>Récapitulatif - {car.model}</IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonText color="dark">
-              <p>Plaque: {car.licensePlate}</p>
-              <p>Réparations effectuées: {car.repairs.length}</p>
-              <hr />
-              <h2 className="ion-text-right">Total: {totalPrice} €</h2>
-            </IonText>
-          </IonCardContent>
-        </IonCard>
+        <div style={{ marginBottom: '30px' }}>
+          <IonIcon icon={receiptOutline} style={{ fontSize: '48px', color: '#1a1a1a', marginBottom: '10px' }} />
+          <IonText color="dark">
+             <h1 style={{ fontWeight: 800, fontSize: '1.8rem', margin: 0 }}>Récapitulatif</h1>
+             <p style={{ fontSize: '1rem', color: '#666', marginTop: '5px' }}>Veuillez vérifier les détails avant de payer.</p>
+          </IonText>
+        </div>
 
-        <IonButton expand="block" color="success" className="ion-margin-top" onClick={handlePayment}>
-          Payer maintenant
+        <div style={{ 
+          background: '#fff', 
+          borderRadius: '24px', 
+          padding: '24px', 
+          boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
+          border: '1px solid rgba(0,0,0,0.03)',
+          marginBottom: '30px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
+             <div style={{ background: '#f0f0f0', padding: '10px', borderRadius: '12px', marginRight: '15px' }}>
+                <IonIcon icon={carOutline} style={{ fontSize: '20px' }} />
+             </div>
+             <div>
+                <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0 }}>{car.model}</h2>
+                <p style={{ fontSize: '0.85rem', color: '#666', margin: 0 }}>{car.licensePlate}</p>
+             </div>
+          </div>
+          
+          <div style={{ borderTop: '1px dashed #eee', paddingTop: '20px' }}>
+             {car.repairs.map((r: any, i: number) => (
+                <div key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                   <span style={{ color: '#666', fontSize: '0.95rem' }}>{r.type}</span>
+                   <span style={{ fontWeight: 600 }}>{r.price || 0} €</span>
+                </div>
+             ))}
+          </div>
+
+          <div style={{ borderTop: '1px solid #1a1a1a', marginTop: '20px', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+             <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Total à payer</span>
+             <span style={{ fontSize: '1.6rem', fontWeight: 800 }}>{totalPrice} €</span>
+          </div>
+        </div>
+
+        <IonButton expand="block" color="dark" style={{ height: '60px', borderRadius: '16px' }} onClick={handlePayment}>
+          <IonIcon icon={cardOutline} slot="start" />
+          Payer la facture
         </IonButton>
+        <p style={{ textAlign: 'center', color: '#999', fontSize: '0.8rem', marginTop: '15px' }}>
+           Paiement sécurisé par Garage S5
+        </p>
       </IonContent>
     </IonPage>
   );

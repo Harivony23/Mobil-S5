@@ -8,9 +8,12 @@ import AddBreakdown from './pages/AddBreakdown';
 import RepairList from './pages/RepairList';
 import RepairDetail from './pages/RepairDetail';
 import Payment from './pages/Payment';
+import RepairHistory from './pages/RepairHistory';
+import AddCar from './pages/AddCar';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
 import { setupForegroundNotifications } from './services/notificationService';
+import NotificationListener from './components/NotificationListener';
 
 
 /* Core CSS required for Ionic components to work properly */
@@ -53,6 +56,7 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <Toaster position="top-center" />
+      <NotificationListener />
       <IonReactRouter>
         <IonRouterOutlet>
           <Route exact path="/login" component={Login} />
@@ -62,6 +66,8 @@ const App: React.FC = () => {
           <Route exact path="/repairs" component={RepairList} />
           <Route exact path="/repair/:id" component={RepairDetail} />
           <Route exact path="/payment/:id" component={Payment} />
+          <Route exact path="/history" component={RepairHistory} />
+          <Route exact path="/add-car" component={AddCar} />
           <Route exact path="/">
             <Redirect to="/login" />
           </Route>

@@ -1,2 +1,97 @@
-/* For information on how to create your own theme, please refer to:
-http://ionicframework.com/docs/theming/ */
+/* --- GLOBAL THEME --- */
+:root {
+  --ion-background-color: #ffffff;
+  --ion-text-color: #000000;
+  --ion-font-family: 'Inter', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+body, ion-app, ion-content, ion-page {
+  --background: #ffffff !important;
+  background-color: #ffffff !important;
+  color: #000000;
+}
+
+/* --- TEXT VISIBILITY --- */
+/* Default text on white is black */
+h1, h2, h3, h4, h5, h6, p, span, div {
+  color: #1a1a1a;
+}
+
+ion-toolbar {
+  --background: #ffffff !important;
+  --color: #000000 !important;
+  color: #1a1a1a;
+}
+
+ion-title {
+  color: #1a1a1a !important;
+}
+
+/* --- IONIC ELEMENTS --- */
+ion-item {
+  --background: transparent !important;
+  --color: #1a1a1a !important;
+}
+
+ion-label {
+  color: #000000 !important;
+  --color: #000000 !important;
+}
+
+ion-input, ion-textarea, ion-select {
+  --color: #000000 !important;
+  color: #000000 !important;
+}
+
+/* Fix for floating labels and placeholders */
+.item-has-placeholder ion-label {
+  transform: translateY(0) scale(1) !important;
+  margin-bottom: 4px;
+}
+
+/* Placeholders */
+ion-input input::placeholder, .native-input::placeholder {
+  color: #777777 !important;
+  opacity: 1;
+}
+
+/* --- DARK BLOCKS & OVERRIDES --- */
+.dark-card {
+  background: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+.dark-card h1, .dark-card h2, .dark-card h3, .dark-card p, .dark-card span, .dark-card ion-icon {
+  color: #ffffff !important;
+}
+
+/* Fix for floating/stacked labels and superposition */
+ion-item {
+  --highlight-color-focused: #000000;
+}
+
+ion-label[position="stacked"], ion-label[position="floating"] {
+  transform: scale(1) !important;
+  pointer-events: none;
+  font-weight: 700 !important;
+  margin-bottom: 8px !important;
+  color: #000000 !important;
+}
+
+/* Ensure colored badges/spans are NOT forced to black */
+[style*="color"] {
+  color: inherit; /* Allow inline styles to work */
+}
+
+/* Specific button text color */
+ion-button {
+  --color: #ffffff !important;
+  color: #ffffff !important;
+}
+
+

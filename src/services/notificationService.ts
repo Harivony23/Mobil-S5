@@ -51,3 +51,23 @@ export const setupForegroundNotifications = () => {
     }
   });
 };
+
+/**
+ * Envoie une notification locale (navigateur/système) sans passer par le serveur
+ */
+export const showLocalNotification = (title: string, body: string) => {
+  if (Notification.permission === 'granted') {
+    const notification = new Notification(title, {
+      body: body,
+      icon: '/assets/icon/favicon.png' // Assurez-vous que le chemin est correct
+    });
+
+    notification.onclick = () => {
+      window.focus();
+    };
+  } else {
+    // Si pas de permission système, on utilise au moins un toast
+    toast.success(`${title}: ${body}`, { duration: 5000 });
+  }
+};
+
