@@ -47,23 +47,24 @@ const Login: React.FC = () => {
 
   return (
     <IonPage>
-      <IonContent className="ion-padding" style={{ '--background': '#ffffff' }}>
-        <div style={{ padding: '60px 20px 40px 20px', textAlign: 'center' }}>
+      <IonContent className="ion-padding" style={{ '--background': '#000000' }}>
+        <div style={{ padding: '40px 10px 10px 10px', textAlign: 'center' }}>
           <div style={{ 
-            background: '#1a1a1a', 
-            width: '80px', 
-            height: '80px', 
-            borderRadius: '24px', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center',
-            margin: '0 auto 20px auto',
-            boxShadow: '0 8px 30px rgba(0,0,0,0.15)'
+            marginBottom: '10px',
+            display: 'flex',
+            justifyContent: 'center'
           }}>
-            <IonIcon icon={carOutline} style={{ fontSize: '40px', color: '#fff' }} />
+            <img 
+              src="/assets/logo.png" 
+              alt="Garage S5 Logo" 
+              style={{ 
+                width: '100%',
+                maxWidth: '600px', 
+                height: 'auto',
+                filter: 'drop-shadow(0 15px 35px rgba(255,107,0,0.2))'
+              }} 
+            />
           </div>
-          <h1 style={{ fontWeight: 800, fontSize: '2rem', margin: 0, letterSpacing: '-1px' }}>Garage S5</h1>
-          <p style={{ color: '#666', marginTop: '5px' }}>Votre mécanicien connecté</p>
         </div>
 
         <div style={{ padding: '0 10px' }}>
@@ -96,7 +97,7 @@ const Login: React.FC = () => {
                </IonItem>
             </div>
 
-            <IonButton expand="block" type="submit" style={{ height: '64px', '--border-radius': '18px', '--box-shadow': '0 10px 25px rgba(0,0,0,0.08)', fontWeight: 700, fontSize: '1.05rem' }}>
+            <IonButton expand="block" type="submit" style={{ height: '64px', '--border-radius': '18px', '--background': 'var(--brand-orange)', color: '#ffffff', fontWeight: 800, fontSize: '1.1rem', boxShadow: '0 10px 25px rgba(255, 107, 0, 0.2)' }}>
               Se connecter
             </IonButton>
           </form>

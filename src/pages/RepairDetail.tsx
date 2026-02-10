@@ -145,7 +145,7 @@ const RepairDetail: React.FC = () => {
         </div>
 
         <div style={{ marginBottom: '20px' }}>
-          <h3 style={{ fontWeight: 800, fontSize: '1.2rem', margin: '0 0 20px 5px', color: '#121212' }}>Liste des travaux</h3>
+          <h3 style={{ fontWeight: 800, fontSize: '1.2rem', margin: '0 0 20px 5px', color: '#cfcfcf' }}>Liste des travaux</h3>
         </div>
 
         <div style={{ display: 'grid', gap: '15px' }}>
@@ -163,7 +163,7 @@ const RepairDetail: React.FC = () => {
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '15px' }}>
                 <div style={{ flex: 1 }}>
                   <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#121212' }}>{repair.type}</h3>
-                  <div style={{ display: 'flex', alignItems: 'center', marginTop: '6px', color: '#999' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', marginTop: '6px', color: '#626262' }}>
                     <IonIcon icon={timeOutline} style={{ fontSize: '14px', marginRight: '5px' }} />
                     <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{repair.duration} min</span>
                   </div>
@@ -203,7 +203,20 @@ const RepairDetail: React.FC = () => {
         </div>
 
         {car.status === 'ready' && (
-          <IonButton expand="block" style={{ marginTop: '45px', height: '64px', '--border-radius': '18px', fontSize: '1.1rem', fontWeight: 700 }} onClick={() => history.push(`/payment/${id}`)}>
+          <IonButton 
+            expand="block" 
+            style={{ 
+                marginTop: '45px', 
+                height: '64px', 
+                '--border-radius': '18px', 
+                '--background': 'var(--brand-orange)', 
+                color: '#ffffff',
+                fontSize: '1.18rem', 
+                fontWeight: 800,
+                boxShadow: '0 10px 25px rgba(255, 107, 0, 0.2)'
+            }} 
+            onClick={() => history.push(`/payment/${id}`)}
+          >
             Régler la facture
           </IonButton>
         )}

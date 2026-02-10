@@ -102,19 +102,19 @@ const Payment: React.FC = () => {
           marginBottom: '30px'
         }}>
           <div style={{ display: 'flex', alignItems: 'center', marginBottom: '20px' }}>
-             <div style={{ background: '#f0f0f0', padding: '10px', borderRadius: '12px', marginRight: '15px' }}>
+             <div style={{ background: '#080808', padding: '10px', borderRadius: '12px', marginRight: '15px' }}>
                 <IonIcon icon={carOutline} style={{ fontSize: '20px' }} />
              </div>
              <div>
                 <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0 }}>{car.model}</h2>
-                <p style={{ fontSize: '0.85rem', color: '#666', margin: 0 }}>{car.licensePlate}</p>
+                <p style={{ fontSize: '1.3rem', color: '#050505', margin: 0 }}>{car.licensePlate}</p>
              </div>
           </div>
           
-          <div style={{ borderTop: '1px dashed #eee', paddingTop: '20px' }}>
+          <div style={{ borderTop: '1px dashed #060606', paddingTop: '20px' }}>
              {car.repairs.map((r: any, i: number) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
-                   <span style={{ color: '#666', fontSize: '0.95rem' }}>{r.type}</span>
+                   <span style={{ color: '#0a0a0a', fontSize: '0.95rem' }}>{r.type}</span>
                    <span style={{ fontWeight: 600 }}>{r.price || 0} €</span>
                 </div>
              ))}

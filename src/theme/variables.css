@@ -1,8 +1,13 @@
-/* --- GLOBAL THEME --- */
+/* --- GLOBAL THEME: DARK MODE --- */
 :root {
-  --ion-background-color: #ffffff;
-  --ion-text-color: #000000;
+  --ion-background-color: #000000;
+  --ion-text-color: #ffffff;
   --ion-font-family: 'Inter', sans-serif;
+  
+  /* Brand Colors from Logo */
+  --brand-orange: #ff6b00;
+  --brand-orange-rgb: 255, 107, 0;
+  --brand-dark: #121212;
 }
 
 * {
@@ -11,87 +16,74 @@
 }
 
 body, ion-app, ion-content, ion-page {
-  --background: #ffffff !important;
-  background-color: #ffffff !important;
-  color: #000000;
+  --background: #000000 !important;
+  background-color: #000000 !important;
+  color: #ffffff;
 }
 
 /* --- TEXT VISIBILITY --- */
-/* Default text on white is black */
+/* Default text on black is white */
 h1, h2, h3, h4, h5, h6, p, span, div {
-  color: #1a1a1a;
+  color: #ffffff;
 }
 
 ion-toolbar {
-  --background: #ffffff !important;
-  --color: #000000 !important;
-  color: #1a1a1a;
+  --background: #000000 !important;
+  --color: #ffffff !important;
+  color: #ffffff;
 }
 
 ion-title {
-  color: #1a1a1a !important;
+  color: #ffffff !important;
 }
 
-/* --- IONIC ELEMENTS --- */
+/* --- DARK COMPONENTS --- */
 ion-item {
-  --background: transparent !important;
-  --color: #1a1a1a !important;
+  --background: #121212 !important;
+  --color: #ffffff !important;
+  --border-radius: 14px;
+  margin-bottom: 10px;
 }
 
 ion-label {
-  color: #000000 !important;
-  --color: #000000 !important;
+  color: #ffffff !important;
+  --color: #ffffff !important;
 }
 
 ion-input, ion-textarea, ion-select {
-  --color: #000000 !important;
-  color: #000000 !important;
+  --color: #ffffff !important;
+  color: #ffffff !important;
 }
 
-/* Fix for floating labels and placeholders */
-.item-has-placeholder ion-label {
-  transform: translateY(0) scale(1) !important;
-  margin-bottom: 4px;
+/* Floating/Stacked Labels */
+ion-label[position="stacked"], ion-label[position="floating"] {
+  color: var(--brand-orange) !important;
+  font-weight: 700 !important;
 }
 
 /* Placeholders */
 ion-input input::placeholder, .native-input::placeholder {
-  color: #777777 !important;
+  color: #666666 !important;
   opacity: 1;
 }
 
-/* --- DARK BLOCKS & OVERRIDES --- */
-.dark-card {
-  background: #1a1a1a !important;
-  color: #ffffff !important;
+/* Cards and Containers */
+.card-dark {
+  background: #121212 !important;
+  border-radius: 24px;
+  padding: 20px;
 }
 
-.dark-card h1, .dark-card h2, .dark-card h3, .dark-card p, .dark-card span, .dark-card ion-icon {
-  color: #ffffff !important;
-}
-
-/* Fix for floating/stacked labels and superposition */
-ion-item {
-  --highlight-color-focused: #000000;
-}
-
-ion-label[position="stacked"], ion-label[position="floating"] {
-  transform: scale(1) !important;
-  pointer-events: none;
-  font-weight: 700 !important;
-  margin-bottom: 8px !important;
-  color: #000000 !important;
-}
-
-/* Ensure colored badges/spans are NOT forced to black */
-[style*="color"] {
-  color: inherit; /* Allow inline styles to work */
-}
-
-/* Specific button text color */
+/* Buttons (Orange as primary) */
 ion-button {
   --color: #ffffff !important;
   color: #ffffff !important;
 }
+
+ion-button[fill="clear"], ion-button[fill="outline"] {
+  --color: #ffffff !important;
+  color: #ffffff !important;
+}
+
 
 

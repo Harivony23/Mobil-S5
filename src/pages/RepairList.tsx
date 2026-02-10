@@ -78,7 +78,7 @@ const RepairList: React.FC = () => {
       </IonHeader>
       <IonContent className="ion-padding" style={{ '--background': '#ffffff' }}>
         <div style={{ marginBottom: '30px' }}>
-           <h1 style={{ fontWeight: 800, fontSize: '1.8rem', margin: 0, color: '#121212', letterSpacing: '-0.5px' }}>Réparations actives</h1>
+           <h1 style={{ fontWeight: 800, fontSize: '1.8rem', margin: 0, color: '#dedede', letterSpacing: '-0.5px' }}>Réparations actives</h1>
            <p style={{ fontSize: '1rem', color: '#666', marginTop: '5px' }}>Consultez l'avancement de vos demandes.</p>
         </div>
 
@@ -89,7 +89,7 @@ const RepairList: React.FC = () => {
         ) : (
           <div style={{ display: 'grid', gap: '15px' }}>
             {cars.length === 0 ? (
-              <div style={{ textAlign: 'center', padding: '60px 20px', background: '#fcfcfc', borderRadius: '30px', border: '2px dashed #eee' }}>
+              <div style={{ textAlign: 'center', padding: '60px 20px', background: '#cecece', borderRadius: '30px', border: '2px dashed #eee' }}>
                 <IonIcon icon={carOutline} style={{ fontSize: '48px', color: '#ddd' }} />
                 <p style={{ color: '#aaa', marginTop: '15px', fontWeight: 500 }}>Aucune voiture en réparation</p>
               </div>

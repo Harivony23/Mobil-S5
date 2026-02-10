@@ -131,7 +131,7 @@ const Register: React.FC = () => {
                </IonItem>
             </div>
 
-            <IonButton expand="block" type="submit" style={{ height: '64px', '--border-radius': '18px', '--box-shadow': '0 10px 25px rgba(0,0,0,0.08)', fontWeight: 700, fontSize: '1.05rem' }}>
+            <IonButton expand="block" type="submit" style={{ height: '64px', '--border-radius': '18px', '--background': 'var(--brand-orange)', color: '#ffffff', fontWeight: 800, fontSize: '1.1rem', boxShadow: '0 10px 25px rgba(255, 107, 0, 0.2)' }}>
               S'inscrire
             </IonButton>
           </form>

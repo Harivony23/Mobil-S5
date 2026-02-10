@@ -82,7 +82,7 @@ const RepairHistory: React.FC = () => {
           <div style={{ background: '#f8f8f8', width: '56px', height: '56px', borderRadius: '18px', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px' }}>
              <IonIcon icon={archiveOutline} style={{ fontSize: '28px', color: '#121212' }} />
           </div>
-          <h1 style={{ fontWeight: 800, fontSize: '1.8rem', margin: 0, color: '#121212', letterSpacing: '-0.5px' }}>Historique</h1>
+          <h1 style={{ fontWeight: 800, fontSize: '1.8rem', margin: 0, color: '#c3c3c3', letterSpacing: '-0.5px' }}>Historique</h1>
           <p style={{ fontSize: '1rem', color: '#666', marginTop: '5px' }}>Toutes vos interventions terminées et payées.</p>
         </div>
 

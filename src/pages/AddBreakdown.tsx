@@ -162,7 +162,7 @@ const AddBreakdown: React.FC = () => {
           </div>
 
           <div style={{ marginBottom: '15px' }}>
-            <h3 style={{ fontWeight: 800, fontSize: '1.2rem', margin: '0 0 15px 5px', color: '#121212' }}>Que faut-il faire ?</h3>
+            <h3 style={{ fontWeight: 800, fontSize: '1.2rem', margin: '0 0 15px 5px', color: '#f0f0f0' }}>Que faut-il faire ?</h3>
           </div>
 
           <div style={{ display: 'grid', gap: '12px' }}>
@@ -176,7 +176,7 @@ const AddBreakdown: React.FC = () => {
                       key={intervention.id || intervention.name} 
                       onClick={() => toggleRepair(intervention)}
                       style={{ 
-                        background: isChecked ? '#121212' : '#ffffff', 
+                        background: isChecked ? '#121212' : '#6d6d6d', 
                         borderRadius: '20px', 
                         padding: '18px', 
                         display: 'flex', 
@@ -190,7 +190,7 @@ const AddBreakdown: React.FC = () => {
                     >
                       <div style={{ flex: 1 }}>
                         <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>{intervention.name}</h3>
-                        <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: isChecked ? 'rgba(255,255,255,0.7)' : '#888' }}>
+                        <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: isChecked ? 'rgba(243, 243, 243, 0.7)' : '#fbfbfb' }}>
                           Estimation: {intervention.duration_minutes} min • {intervention.price || 0} €
                         </p>
                       </div>
@@ -205,9 +205,22 @@ const AddBreakdown: React.FC = () => {
             )}
           </div>
 
-          <IonButton expand="block" type="submit" style={{ marginTop: '40px', height: '64px', '--border-radius': '20px', fontSize: '1.1rem', fontWeight: 700 }}>
-             Confirmer ma demande
-          </IonButton>
+          <IonButton 
+          expand="block" 
+          type="submit" 
+          style={{ 
+            marginTop: '40px', 
+            height: '64px', 
+            '--border-radius': '18px', 
+            '--background': 'var(--brand-orange)', 
+            color: '#ffffff',
+            fontWeight: 800,
+            fontSize: '1.1rem',
+            boxShadow: '0 10px 25px rgba(255, 107, 0, 0.2)'
+          }}
+        >
+          Envoyer ma demande
+        </IonButton>
         </form>
         <div style={{ height: '40px' }} />
         <IonLoading isOpen={showLoading} message={'Enregistrement...'} spinner="crescent" />
