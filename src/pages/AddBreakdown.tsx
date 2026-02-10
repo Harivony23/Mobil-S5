@@ -191,7 +191,7 @@ const AddBreakdown: React.FC = () => {
                       <div style={{ flex: 1 }}>
                         <h3 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>{intervention.name}</h3>
                         <p style={{ margin: '4px 0 0 0', fontSize: '0.8rem', color: isChecked ? 'rgba(243, 243, 243, 0.7)' : '#fbfbfb' }}>
-                          Estimation: {intervention.duration_minutes} min • {intervention.price || 0} €
+                          Estimation: {intervention.duration_minutes} min • {intervention.price || 0} Ar
                         </p>
                       </div>
                       <IonCheckbox

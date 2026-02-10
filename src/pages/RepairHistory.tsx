@@ -130,7 +130,7 @@ const RepairHistory: React.FC = () => {
                      </div>
                      <div style={{ textAlign: 'right' }}>
                         <p style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: '#121212' }}>
-                          {item.repairs?.reduce((acc: number, r: any) => acc + (r.price || 0), 0) || 0}€
+                          {item.repairs?.reduce((acc: number, r: any) => acc + (r.price || 0), 0) || 0}Ar
                         </p>
                      </div>
                   </div>

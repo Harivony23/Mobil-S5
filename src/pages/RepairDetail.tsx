@@ -165,7 +165,7 @@ const RepairDetail: React.FC = () => {
                   <h3 style={{ margin: 0, fontSize: '1.05rem', fontWeight: 800, color: '#121212' }}>{repair.type}</h3>
                   <div style={{ display: 'flex', alignItems: 'center', marginTop: '6px', color: '#626262' }}>
                     <IonIcon icon={timeOutline} style={{ fontSize: '14px', marginRight: '5px' }} />
-                    <span style={{ fontSize: '0.85rem', fontWeight: 600 }}>{repair.duration} min</span>
+                    <span style={{ fontSize: '0.85rem', fontWeight: 600, color: '#121212' }}>{repair.duration} min</span>
                   </div>
                 </div>
                 <div style={{ 

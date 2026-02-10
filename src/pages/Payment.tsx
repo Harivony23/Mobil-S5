@@ -94,7 +94,7 @@ const Payment: React.FC = () => {
         </div>
 
         <div style={{ 
-          background: '#fff', 
+          background: '#fdfdfd', 
           borderRadius: '24px', 
           padding: '24px', 
           boxShadow: '0 8px 24px rgba(0,0,0,0.08)',
@@ -106,7 +106,7 @@ const Payment: React.FC = () => {
                 <IonIcon icon={carOutline} style={{ fontSize: '20px' }} />
              </div>
              <div>
-                <h2 style={{ fontSize: '1.15rem', fontWeight: 700, margin: 0 }}>{car.model}</h2>
+                <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: '#050505', margin: 0 }}>{car.model}</h2>
                 <p style={{ fontSize: '1.3rem', color: '#050505', margin: 0 }}>{car.licensePlate}</p>
              </div>
           </div>
@@ -115,14 +115,14 @@ const Payment: React.FC = () => {
              {car.repairs.map((r: any, i: number) => (
                 <div key={i} style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
                    <span style={{ color: '#0a0a0a', fontSize: '0.95rem' }}>{r.type}</span>
-                   <span style={{ fontWeight: 600 }}>{r.price || 0} €</span>
+                   <span style={{ fontWeight: 600, color: '#050505' }}>{r.price || 0} Ar</span>
                 </div>
              ))}
           </div>
 
           <div style={{ borderTop: '1px solid #1a1a1a', marginTop: '20px', paddingTop: '20px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-             <span style={{ fontSize: '1.1rem', fontWeight: 700 }}>Total à payer</span>
-             <span style={{ fontSize: '1.6rem', fontWeight: 800 }}>{totalPrice} €</span>
+             <span style={{ fontSize: '1.1rem', fontWeight: 700, color: '#050505' }}>Total à payer</span>
+             <span style={{ fontSize: '1.6rem', fontWeight: 800, color: '#050505' }}>{totalPrice} Ar</span>
           </div>
         </div>
 
